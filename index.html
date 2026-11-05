@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>속미인곡(續美人曲) - 질문 중세국어 원문 완벽 반영 학습지</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-bg: #eff6ff;
+            --border: #cbd5e1;
+            --text-dark: #1e293b;
+            --ans-blue: #1d4ed8;
+            --mask-bg: #e2e8f0;
+            --mask-hover: #cbd5e1;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+            line-height: 1.75;
+            padding-bottom: 5rem;
+        }
+
+        /* 💡 중세 국어 고어 서체 전용 클래스 (원문 및 질문 인용구) */
+        .old-hangul {
+            font-family: "새굴림", "New Gulim", "Batang", "바탕", "Malgun Gothic", "Noto Serif KR", serif;
+            font-size: 1.05rem;
+            letter-spacing: -0.2px;
+            color: #0f172a;
+            line-height: 1.85;
+        }
+
+        .old-hangul-q {
+            font-family: "새굴림", "New Gulim", "Batang", "바탕", "Malgun Gothic", "Noto Serif KR", serif;
+            color: #1e1b4b;
+            font-weight: 700;
+        }
+
+        /* 상단 고정 컨트롤 바 */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #ffffff;
+            border-bottom: 2px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06);
+            padding: 0.8rem 1.4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+        .header-title p {
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        .btn-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .ctrl-btn {
+            border: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .btn-hide { background: #fee2e2; color: #dc2626; }
+        .btn-hide:hover { background: #fecaca; }
+        .btn-show { background: #dbeafe; color: #1d4ed8; }
+        .btn-show:hover { background: #bfdbfe; }
+
+        .progress-box {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #475569;
+            background: #f8fafc;
+            padding: 0.35rem 0.7rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* A4 학습지 형태 */
+        .sheet {
+            max-width: 920px;
+            margin: 1.5rem auto;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 2.5rem 2.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .sheet-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        .sheet-top .main-tag {
+            font-size: 0.85rem;
+            background: #0f172a;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .sheet-top .title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        h2.sec-title {
+            font-size: 1.08rem;
+            font-weight: 800;
+            margin: 1.6rem 0 0.7rem 0;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* 💡 가림막(클릭 시 파란색 정답 노출) */
+        .mask {
+            display: inline-block;
+            background-color: var(--mask-bg);
+            color: transparent !important;
+            border-radius: 4px;
+            padding: 0 6px;
+            margin: 1px 2px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s ease-in-out;
+            vertical-align: baseline;
+            border: 1.5px dashed #94a3b8;
+            font-weight: 700;
+            min-width: 26px;
+            text-align: center;
+        }
+        .mask:not(.revealed):hover {
+            background-color: var(--mask-hover);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .mask.revealed {
+            background-color: var(--primary-bg);
+            color: var(--ans-blue) !important;
+            border: 1px solid #bfdbfe;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        /* 표(Table) 스타일 */
+        table.study-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.8rem 0 1.2rem 0;
+            font-size: 0.93rem;
+        }
+        table.study-table th, table.study-table td {
+            border: 1px solid var(--border);
+            padding: 0.65rem 0.75rem;
+            vertical-align: middle;
+        }
+        table.study-table th {
+            background-color: #f8fafc;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .side-note {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.35rem;
+            line-height: 1.5;
+        }
+
+        .question-card {
+            background: #fafafa;
+            border-left: 4px solid #3b82f6;
+            padding: 0.8rem 1rem;
+            margin: 0.7rem 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.92rem;
+        }
+        .q-title {
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .sheet { padding: 1.2rem 0.8rem; }
+            table.study-table th, table.study-table td { padding: 0.5rem 0.4rem; font-size: 0.85rem; }
+            .old-hangul { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 상단 고정 컨트롤러 -->
+    <div class="sticky-header">
+        <div class="header-title">
+            <h1>속미인곡(續美人曲) 인터랙티브 학습지</h1>
+            <p>💡 회색 박스를 클릭하면 파란색 정답이 나타납니다. (다시 누르면 숨김)</p>
+        </div>
+        <div class="btn-group">
+            <span class="progress-box" id="progressText">확인: 0 / 0</span>
+            <button class="ctrl-btn btn-show" onclick="revealAll()">전체 정답 보기</button>
+            <button class="ctrl-btn btn-hide" onclick="hideAll()">전체 가리기</button>
+        </div>
+    </div>
+
+    <!-- 학습지 본문 -->
+    <div class="sheet">
+        <div class="sheet-top">
+            <div>
+                <span class="main-tag">학습지</span>
+                <div style="font-size: 0.85rem; color:#64748b; margin-top:4px;">2. 우리 삶을 비추는 한국 문학</div>
+                <div class="title">02 속미인곡(續美人曲) <span style="font-size: 1rem; font-weight: normal; color:#64748b;"> 정철</span></div>
+            </div>
+            <div style="text-align: right; font-size: 0.85rem; color:#64748b;">
+                반: ____ &nbsp; 번: ____ &nbsp; 이름: ________
+            </div>
+        </div>
+
+        <!-- 1. 갈래 특징 -->
+        <h2 class="sec-title">1. 갈래 특징: 가사</h2>
+        <div style="font-size: 0.93rem; line-height: 1.85;">
+            <p>① <strong>형식</strong> : 고려 말에 발생하고 조선 초기 ( <span class="mask">사대부</span> ) 계층에 의해 확고한 문학 양식으로 자리 잡아 조선시대를 관통하며 지속적으로 전해 내려온 문학의 한 갈래이다. ( <span class="mask">4</span> )음보이며, 한 음보를 이루는 음절의 수는 대체로 ( <span class="mask">3 ~ 4</span> )음절이고 행(行)에 제한을 두지 않는 ( <span class="mask">연속체</span> ) 율문(律文) 형식을 갖고 있다.</p>
+            <p>② <strong>작가층</strong> : 주요 작가층은 ( <span class="mask">사대부</span> ) 계층이며, 장르 자체가 지닌 폭넓은 개방성 덕분에 양반가(兩班家)의 부녀자, 승려, 중·서민(中·庶民) 등 기술(記述) 능력을 갖춘 모든 계층이 참여했다. 내용 또한 까다로운 제한 요건이 없어 다채롭게 전개되었다.</p>
+            <p>③ <strong>내용</strong> : 조선 전기는 강호의 생활을 노래한 작품(정극인의 '상춘곡')이 주를 이루었으나 이후 여행, 유배, 정치적 진퇴 등 사대부들의 경험과 소회를 서정적으로 읊은 작품(정철의 '관동별곡', '사미인곡', '속미인곡')도 다수 창작되었다. 후기에 와서는 교술성이 짙어지거나 서사성이 강해졌다.</p>
+            <p>④ <strong>향유 방식</strong>: 가사의 대표적인 향유 방식은 음악적 곡조에 맞춰 소리 내어 부르는 ( <span class="mask">가창</span> ), 낮게 읊조리며 율격을 느끼는 ( <span class="mask">음영</span> ), 그리고 눈으로 읽고 의미를 깊이 음미하는 ( <span class="mask">완독</span> )의 세 가지로 분류된다. 조선 전기는 사대부 중심의 가창·음영이 주를 이뤘으나, 조선 후기로 가면서 내용이 장편화되고 산문적이 되며 ( <span class="mask">필사</span> )와 독서 중심의 완독 형태로 확장되었다.</p>
+        </div>
+
+        <!-- 2. 창작 의도 -->
+        <h2 class="sec-title">2. 다음 글을 참고하여 이 작품의 창작 의도를 파악해 보자.</h2>
+        <div class="question-card" style="background:#f8fafc; border-left-color: #6366f1;">
+            <p style="font-size: 0.88rem; color:#475569; margin-bottom: 0.5rem;">
+                정철은 조선 명종ㆍ선조 때의 문신ㆍ시인(1536~1593)으로 자는 계함(季涵), 호는 송강(松江)이다. 가사 문학의 대가로 국문학사상 중요한 &lt;관동별곡&gt;, &lt;사미인곡&gt; 등의 가사 작품과 시조 작품을 남겼다. 저서에 ≪송강집≫과 ≪송강가사≫가 있다. 정철이 관직에 머무르던 조선 선조 때에는 동인과 서인의 당쟁이 극심했고, 그는 서인 세력의 주요 인물로서 늘 당쟁의 한가운데에 있었다. 그러한 정치적 환경 때문에 정철은 여러 차례 탄핵을 받았고, 그때마다 선조가 정철을 두둔하며 정계에 복귀시켰다. 정철은 선조 18년에 네 번째로 벼슬에서 물러나 낙향하였고, 이때 임금을 그리워하는 마음을 담아 「사미인곡」, 「속미인곡」 등을 지었다.
+            </p>
+            <div>
+                <strong>☞ 창작 의도:</strong>
+                <span class="mask">관직에서 물러나 낙향한 상태에서 임금(선조)에 대한 변함없는 충성심과 그리움을 두 여인의 대화 형식을 빌려 고백하기 위해서 창작하였다.</span>
+            </div>
+        </div>
+
+        <!-- 3. 원문 및 현대어 풀이 -->
+        <h2 class="sec-title">3. 원문 및 현대어 풀이 [대화 구조]</h2>
+        
+        <h3 style="font-size: 0.95rem; margin: 1rem 0 0.4rem; color: #0284c7;">&lt;서사&gt; 임과 이별한 사연</h3>
+        <table class="study-table">
+            <thead>
+                <tr>
+                    <th style="width: 12%;">화자</th>
+                    <th style="width: 44%;">원문 (중세 국어)</th>
+                    <th style="width: 44%;">현대어 풀이</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center; font-weight: bold; background: #fffbeb;">여인 1</td>
+                    <td class="old-hangul">
+                        뎨 가 뎌 각시 본 듯도 뎌이고.<br>
+                        천상(天上) 옥경(白玉京)을 엇디야 니별고<br>
+                         다 뎌 져믄 날의 눌을 보라 가시고.
+                        <div class="side-note">*천상 옥경: 옥황상제가 있는 곳. 여기서는 '한양 대궐'</div>
+                    </td>
+                    <td>
+                        ( <span class="mask">저기</span> ) 가는 저 각시 본 듯도 ( <span class="mask">하구나</span> )<br>
+                        (어디서 본 듯한 사람이구나).<br>
+                        임금이 계시는 ( <span class="mask">대궐</span> )을 어찌하여 ( <span class="mask">이별하고</span> ),<br>
+                        해가 다 ( <span class="mask">져서</span> ) 저문 날에 ( <span class="mask">누구를</span> ) 만나러 가시는고?
+                    </td>
+                </tr>
+                <tr>
+                    <td rowspan="2" style="text-align: center; font-weight: bold; background: #eff6ff;">여인 2</td>
+                    <td class="old-hangul">
+                        어와 네여이고 이내 셜 드러보오.<br>
+                        <div class="side-note">*셜: 사정 이야기</div>
+                        내 얼골 이 거동이 님 괴얌즉 가마<br>
+                        엇딘디 날 보시고 네로다 너기실<br>
+                        <div class="side-note">*네로다 너기실: 너로다 여기면서 사랑해 주시니</div>
+                        나도 님을 미더 군디 전혀 업서<br>
+                        이야 교야 어러이 구돗디<br>
+                        <div class="side-note">*이야 교야 어러이 구돗디: 아양과 교태를 떨면서 (너무) 어지럽게 굴어서인지</div>
+                        반기시 비치 녜와 엇디 다신고.
+                    </td>
+                    <td>
+                        아, ( <span class="mask">너로구나</span> ). 내 사정 이야기를 ( <span class="mask">들어보오</span> ).<br><br>
+                        내 ( <span class="mask">모습</span> )과 행동거지가 임께서 ( <span class="mask">사랑함직</span> ) 한가마는<br>
+                        어쩐지 나를 보시고 ( <span class="mask">너로구나</span> ) 여기시기에<br>
+                        나도 임을 믿어 ( <span class="mask">딴 생각이</span> ) 전혀 없어,<br>
+                        ( <span class="mask">아양</span> )과 교태를 떨면서 ( <span class="mask">어지럽게</span> ) 굴어서인지<br>
+                        반기시는 낯빛이 ( <span class="mask">옛날과</span> ) 어찌 ( <span class="mask">다르신고</span> )
+                    </td>
+                </tr>
+                <tr>
+                    <td class="old-hangul">
+                        누어 각하고 니러 안자 혜여니<br>
+                        내 몸의 지은 죄 뫼티 혀시니<br>
+                        하히라 원망며 사이라 허믈랴<br>
+                        셜워 플텨 혜니 조믈(造物)의 타시로다.<br>
+                        <div class="side-note">*혜여니: 생각하니</div>
+                    </td>
+                    <td>
+                        누워 생각하고 일어나 앉아 ( <span class="mask">생각해 보니</span> )<br>
+                        이 몸의 지은 죄가 ( <span class="mask">산처럼</span> ) 쌓여 있어,<br>
+                        하늘을 원망하며 다른 사람을 ( <span class="mask">탓하겠는가</span> )<br>
+                        ( <span class="mask">서러움</span> )에 곰곰 생각하니 ( <span class="mask">조물주의 탓이로다</span> ).
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 질문 1, 2, 3 (중세국어 원형 그대로 반영) -->
+        <div class="question-card">
+            <div class="q-title">1. ʻ<span class="old-hangul-q">텬샹(天上) 옥경(白玉京)을 엇디야 니별(離別)고</span>’에 반영된 처지는?</div>
+            <div>☞ <span class="mask">천상에서 지상으로 적강한 천상 선녀의 처지 (벼슬자리에서 물러나 임금(선조)의 곁을 떠나 시골(창평)에 유배/낙향해 있는 처지)</span></div>
+        </div>
+        <div class="question-card">
+            <div class="q-title">2. ʻ<span class="old-hangul-q">누어 각하고 니러 안자 혜여니 내 몸의 지은 죄 뫼티 혀시니</span>’에 드러난 심리는?</div>
+            <div>☞ <span class="mask">임과 이별하게 된 원인을 모두 자신의 탓으로 돌리는 자책(自責)과 반성, 후회의 심리</span></div>
+        </div>
+        <div class="question-card">
+            <div class="q-title">3. ʻ<span class="old-hangul-q">하히라 원망며 ~ 조믈(造物)의 타시로다</span>’에 나타난 자세는?</div>
+            <div>☞ <span class="mask">아무도 원망하지 않고 모든 상황을 자신의 운명으로 수용하는 운명론적/수긍적 자세</span></div>
+        </div>
+
+        <h3 style="font-size: 0.95rem; margin: 1.5rem 0 0.4rem; color: #0284c7;">&lt;본사&gt; 님을 이별하고 그리워하는 사연</h3>
+        <table class="study-table">
+            <thead>
+                <tr>
+                    <th style="width: 12%;">화자</th>
+                    <th style="width: 44%;">원문 (중세 국어)</th>
+                    <th style="width: 44%;">현대어 풀이</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center; font-weight: bold; background: #fffbeb;">여인 1</td>
+                    <td class="old-hangul">글란 각 마오</td>
+                    <td>( <span class="mask">그렇게</span> ) 생각하지 마세요.</td>
+                </tr>
+                <tr>
+                    <td rowspan="3" style="text-align: center; font-weight: bold; background: #eff6ff;">여인 2</td>
+                    <td class="old-hangul">
+                        친 일이 이셔이다<br>
+                        님을 뫼셔 이셔 님의 일을 내 알거니<br>
+                        믈  얼굴이 편실 적 몃날일고<br>
+                        츈한 고열(春寒苦熱)은 엇디야 디내시며,<br>
+                        츄일동텬(秋日冬天)은 뉘라셔 뫼셧고<br>
+                        <div class="side-note">*춘한고열: 봄 추위와 여름 더위 *추일동천: 가을과 겨울의 추위</div>
+                        쥭조반(粥朝飯) 죠석(朝夕) 뫼 녜와 티 셰시가<br>
+                        기나긴 밤의 은 엇디 자시고.
+                    </td>
+                    <td>
+                        [마음속에] ( <span class="mask">맺힌</span> ) 일이 있습니다.<br>
+                        예전에 임을 ( <span class="mask">모시어서</span> ) 임의 일을 내가 알거니,<br>
+                        ( <span class="mask">물같은</span> ) 얼굴이 편하실 때가 몇 날인고?<br>
+                        이른 봄날의 ( <span class="mask">추위</span> )와 여름철의 ( <span class="mask">무더위</span> )는 어떻게 지내시며<br>
+                        가을과 겨울 추위에는 누가 ( <span class="mask">모셨는고</span> ).<br>
+                        죽과 아침 저녁 ( <span class="mask">밥</span> )은 ( <span class="mask">예전처럼</span> ) 드시는가.<br>
+                        기나긴 밤에 잠은 어찌 ( <span class="mask">주무시는고</span> ).
+                    </td>
+                </tr>
+                <tr>
+                    <td class="old-hangul">
+                        님다히 쇼식(消息)을 아므려나 아쟈니,<br>
+                        오도 거의로다. 일이나 사올가.<br>
+                        내  둘  업다. 어드러로 가쟛말고.<br>
+                        잡거니 밀거니 놉픈 뫼 올라가니<br>
+                        구롬은니와 안개 므일고<br>
+                        산쳔(山川)이 어둡거니 일월(日月)을 엇디 보며,<br>
+                        지척(咫尺)을 모거든 천리(千里)를 라보랴.
+                    </td>
+                    <td>
+                        임 계신 곳의 소식을 어떻게 해서라도 알려고 하니,<br>
+                        오늘도 ( <span class="mask">저물었구나</span> ). 내일이나 임의 소식 전해 줄 ( <span class="mask">사람이</span> ) 올까?<br>
+                        내 ( <span class="mask">마음</span> ) 둘 곳이 없다. 어디로 ( <span class="mask">가자는 말인가</span> )<br>
+                        [바위나 나무뿌리 등을] 잡기도 하고 밀기도 하면서 높은 ( <span class="mask">산</span> )에 올라가니,<br>
+                        ( <span class="mask">구름은 물론이고</span> ) 안개는 무슨 일로 끼어 있는고?<br>
+                        산천이 어두운데 해와 달을 어떻게 보며,<br>
+                        ( <span class="mask">가까운 곳</span> )을 모르는데, 천 리나 되는 먼 곳을 바라볼 수 있으랴?
+                    </td>
+                </tr>
+                <tr>
+                    <td class="old-hangul">
+                        하리 믈의 가 길히나 보쟈 니<br>
+                        람이야 믈결이야 어둥졍 된뎌이고.<br>
+                        <div class="side-note">*어둥졍: 어수선하게 *된뎌이고: 되었구나.</div>
+                        샤공은 어 가고 뷘 만 걸렷니.<br>
+                        강텬(江天)의 혼쟈 셔셔 디  구버보니,<br>
+                        님다히 쇼식(消息)이 더옥 아득뎌이고.<br>
+                        <div class="side-note">*강천: 강가</div>
+                        모쳠(茅簷)  자리의 밤듕만 도라오니<br>
+                        반벽청등(半壁靑燈)은 눌 위야 갓고<br>
+                        오며 리며 헤며 바니니,<br>
+                        져근덧 녁진(力盡)야 픗을 잠간 드니<br>
+                        <div class="side-note">*오며 리며 헤며 바니니: 오르며 내리며 헤매며 방황하니 *녁진야: 힘이 다하여 *픗: 깊이 들지 못하는 잠</div>
+                        졍셩(精誠)이 지극야 의 님을 보니<br>
+                        옥(玉) 얼굴이 반이나마 늘거셰라.<br>
+                        의 머근 말 슬장 자 니<br>
+                        눈믈이 바라 나니 말인들 어이 며<br>
+                        <div class="side-note">*슬장: 실컷 *자: 사뢰자, 아뢰자</div>
+                        정(情)을 못다야 목이조차 메여니,<br>
+                        오뎐된 계성(鷄聲)의 은 엇디 돗던고<br>
+                        <div class="side-note">*오뎐된: 방정맞은 *계성: 닭 울음 소리</div>
+                    </td>
+                    <td>
+                        ( <span class="mask">차라리</span> ) 물가에 가서 뱃길이나 알아 보려고 하니 바람과 물결로 어수선하게 되었구나.<br>
+                        사공은 어디 가고 ( <span class="mask">빈 배만</span> ) 걸렸는고?<br>
+                        강가에 혼자 서서 ( <span class="mask">지는 해</span> )를 굽어보니 임 계신 곳의 소식이 더욱 ( <span class="mask">아득하구나</span> ).<br>
+                        ( <span class="mask">초가집</span> ) 찬 잠자리에 한밤중에 돌아오니, ( <span class="mask">벽 가운데 걸려 있는 등불</span> )은 누구를 위하여 밝은고?<br>
+                        산을 오르내리며 강가를 ( <span class="mask">헤매며</span> ) 방황하니, ( <span class="mask">잠깐 사이에</span> ) 힘을 다해 풋잠을 잠깐 드니,<br>
+                        정성이 지극하여 ( <span class="mask">꿈에</span> ) 임을 보니 옥과 같이 곱던 얼굴이 반 넘어 ( <span class="mask">늙었구나</span> ).<br>
+                        마음 속에 먹은 말씀을 ( <span class="mask">실컷</span> ) 아뢰려고 하였더니 눈물이 ( <span class="mask">연달아</span> ) 나니 말인들 어찌 하며<br>
+                        정회(情懷)도 못 다풀어 ( <span class="mask">목마저</span> ) 메니, 방정맞은 닭소리에 잠은 어찌 ( <span class="mask">깨었던고</span> )?
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 본사 탐구 질문 (중세국어 원형 그대로 반영) -->
+        <div class="question-card">
+            <div class="q-title">1. 화자는 무엇을 걱정하는가?</div>
+            <div>☞ <span class="mask">이별 후 홀로 계신 임(임금)의 건강과 안위(추위와 더위, 식사, 밤잠)</span></div>
+        </div>
+        <div class="question-card">
+            <div class="q-title">2. 화자는 무엇을 원하는가?</div>
+            <div>☞ <span class="mask">임 계신 곳의 소식을 듣거나 임을 직접 만나 재회하는 것</span></div>
+        </div>
+        <div class="question-card">
+            <div class="q-title">3. ʻ<span class="old-hangul-q">잡거니 밀거니 놉픈 뫼 올라가니 구롬은니와 안개 므일고</span>’에 드러난 화자의 심정을 짐작해 보자.</div>
+            <div>☞ <span class="mask">임의 소식을 알고 싶어 산에 올라갔으나 장애물(구름, 안개)로 인해 소식을 알 수 없어 안타깝고 답답한 심정</span></div>
+        </div>
+        <div class="question-card">
+            <div class="q-title">4. 임과의 재회를 가로막는 것은 무엇인가?</div>
+            <div>☞ <span class="mask">구름, 안개, 바람, 물결 (정치적으로는 임금의 눈을 가리는 '간신'을 상징)</span></div>
+        </div>
+        <div class="question-card">
+            <div class="q-title">※ 객관적 상관물(화자의 정서나 감정을 대신 나타내 주는 사물이나 상황)</div>
+            <div>
+                ☞ ① <span class="old-hangul-q">븬 </span>: <span class="mask">화자의 외로움을 심화하는 사물</span><br>
+                ☞ ② <span class="old-hangul-q">반벽청등(半壁靑燈)</span>: <span class="mask">외로움과 쓸쓸함을 심화하는 사물</span><br>
+                ☞ ③ <span class="old-hangul-q">어엿븐 그림재(그림자)</span>: <span class="mask">화자의 극심한 고독감과 외로움을 강조하는 존재</span>
+            </div>
+        </div>
+
+        <h3 style="font-size: 0.95rem; margin: 1.5rem 0 0.4rem; color: #0284c7;">&lt;결사&gt; 임에 대한 사모의 정</h3>
+        <table class="study-table">
+            <thead>
+                <tr>
+                    <th style="width: 12%;">화자</th>
+                    <th style="width: 44%;">원문 (중세 국어)</th>
+                    <th style="width: 44%;">현대어 풀이</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center; font-weight: bold; background: #eff6ff;">여인 2</td>
+                    <td class="old-hangul">
+                        어와, 허로다. 이 님이 어 간고.<br>
+                        결의 니러 안자 창(窓)을 열고 라보니<br>
+                        어엿븐 그림재 날 조 이로다.<br>
+                        하리 싀여디여 낙월(落月)이나 되야이셔<br>
+                        님 겨신 창 안해 번드시 비최리라<br>
+                        <div class="side-note">*싀여디여: 죽어서 *낙월: 달빛</div>
+                    </td>
+                    <td>
+                        아, 허황된 일이로다. 이 임이 어디 갔는고?<br>
+                        잠결에 ( <span class="mask">일어나 앉아</span> ) 창문을 열고 밖을 바라보니,<br>
+                        ( <span class="mask">불쌍한</span> ) (내) 그림자만이 나를 ( <span class="mask">따르고</span> ) 있을 뿐이로다.<br>
+                        차라리 죽어서 ( <span class="mask">지는 달</span> )이나 되어서<br>
+                        임이 계신 창문 안에 ( <span class="mask">환하게</span> ) 비치리라.
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; font-weight: bold; background: #fffbeb;">여인 1</td>
+                    <td class="old-hangul">각시님, 이야니와 구 비나 되쇼셔.</td>
+                    <td>각시님, ( <span class="mask">달이 되기보다는</span> ) 궂은 비나 되십시오.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 결사 질문 및 비교 표 (중세국어 원형 그대로 반영) -->
+        <div class="question-card">
+            <div class="q-title">1. ʻ<span class="old-hangul-q">하리 싀여디여 낙월(落月)이나 되야이셔</span>’에 짐작할 수 있는 화자의 심정은?</div>
+            <div>☞ <span class="mask">죽어서라도 지는 달이 되어 멀리서나마 임을 묵묵히 바라보고 조용히 비추고자 하는 소극적이고 멀리서 그리워하는 애절한 심정</span></div>
+        </div>
+
+        <div class="question-card">
+            <div class="q-title">2. ʻ<span class="old-hangul-q">각시님 이야니와 구 비나 되쇼셔.</span>’에 담긴 의미는? ʻ<span class="old-hangul-q">낙월</span>’과 ʻ<span class="old-hangul-q">구 비</span>’는 어떤 차이가 있을까?</div>
+            <table class="study-table" style="text-align: center; margin-top: 0.5rem; background: #ffffff;">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">ʻ<span class="old-hangul-q">낙월</span>’</th>
+                        <th style="width: 50%;">ʻ<span class="old-hangul-q">구 비</span>’</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="mask">멀리서 잠깐 멈추어 비춤</span></td>
+                        <td><span class="mask">가까이서 오래 임을 적심</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="mask">소극적·간접적·수동적 사랑 표출</span></td>
+                        <td><span class="mask">적극적·직접적·능동적 사랑 표출</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="question-card">
+            <div class="q-title">3. (전체적으로 보아) 이 글의 주제는 무엇일까?</div>
+            <div>☞ <span class="mask">임(선조 임금)을 향한 변함없는 충성과 애정 및 이별의 슬픔 - 연군지정(愛君之情)</span></div>
+        </div>
+
+        <div class="question-card">
+            <div class="q-title">4. 다음 시어의 의미를 파악해 보자.</div>
+            <table class="study-table" style="text-align: center; margin-top: 0.5rem; background: #ffffff;">
+                <thead>
+                    <tr>
+                        <th style="width: 35%;">ʻ<span class="old-hangul-q">임</span>’</th>
+                        <th style="width: 65%;">ʻ<span class="old-hangul-q">구롬</span>’, ʻ<span class="old-hangul-q">안개</span>’, ʻ<span class="old-hangul-q">람</span>’, ʻ<span class="old-hangul-q">믈결</span>’</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="mask">선조 임금</span></td>
+                        <td><span class="mask">임과 화자의 사이를 막는 간신(간신배) 또는 당쟁 세력</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 4. 핵심 정리 -->
+        <h2 class="sec-title">4. 핵심 정리</h2>
+        <table class="study-table">
+            <tr>
+                <th style="width: 16%;">갈래</th>
+                <td>가사, 양반 가사, 서정 가사, ( <span class="mask">대화체</span> ) 가사</td>
+            </tr>
+            <tr>
+                <th>성격</th>
+                <td>서정적, 연모적, 충의적, 비판적[ ( <span class="mask">간신</span> ) 비판 ]</td>
+            </tr>
+            <tr>
+                <th>제재</th>
+                <td>임을 향한 ( <span class="mask">그리움</span> )과 이별의 ( <span class="mask">슬픔</span> )</td>
+            </tr>
+            <tr>
+                <th>주제</th>
+                <td><strong>연군지정(戀君之情)</strong> - <span class="mask">임(선조 임금)을 향한 변함없는 충성과 애정</span></td>
+            </tr>
+            <tr>
+                <th>특징</th>
+                <td>
+                    1. 두 여인(갑녀, 을녀)의 ( <span class="mask">대화</span> ) 구조로 구성되어 사실감과 입체감을 부여함.<br>
+                    2. 우리말의 미감과 순우리말 시어 표현을 극대화함.<br>
+                    3. &lt;사미인곡(思美人曲)&gt;의 속편으로, 감정의 객관화와 정절 표현이 더욱 뛰어남.
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 인터랙티브 스크립트 -->
+    <script>
+        const masks = document.querySelectorAll('.mask');
+        const progressText = document.getElementById('progressText');
+
+        // 가림막 클릭 시 토글
+        masks.forEach(mask => {
+            mask.addEventListener('click', () => {
+                mask.classList.toggle('revealed');
+                updateProgress();
+            });
+        });
+
+        // 진행률 업데이트
+        function updateProgress() {
+            const revealedCount = document.querySelectorAll('.mask.revealed').length;
+            progressText.innerText = `확인: ${revealedCount} / ${masks.length}`;
+        }
+
+        // 전체 정답 보이기
+        function revealAll() {
+            masks.forEach(m => m.classList.add('revealed'));
+            updateProgress();
+        }
+
+        // 전체 가리기
+        function hideAll() {
+            masks.forEach(m => m.classList.remove('revealed'));
+            updateProgress();
+        }
+
+        // 초기 카운트 계산
+        updateProgress();
+    </script>
+</body>
+</html>
